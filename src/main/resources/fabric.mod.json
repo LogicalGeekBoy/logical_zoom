@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "logical_zoom",
+  "version": "${version}",
+
+  "name": "Logical Zoom",
+  "description": "A simple zoom",
+  "authors": [
+    "LogicalGeekBoy"
+  ],
+  "contact": {
+    "homepage": "https://logicalgeekboy.com",
+    "sources": "https://github.com/logicalgeekboy/logical_zoom"
+  },
+
+  "license": "MIT",
+  "icon": "assets/logical_zoom/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.logicalgeekboy.logical_zoom.LogicalZoom"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "logical_zoom.client-mixins.json",
+      "environment": "client"
+    }
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.2",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}

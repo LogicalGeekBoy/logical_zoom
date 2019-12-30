@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.logicalgeekboy.logical_zoom.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+      "LogicalZoomMixin"
+    ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
