@@ -17,3 +17,12 @@ By default the C key is mapped for zooming (as with Optifine) but you can change
 4. Start Minecraft and go to Options > Controls > Logical Zoom to change the hotkey.
 
 This is a client-side mod and so doesn't require Fabric on the server.
+
+## Updating for new Minecraft version
+
+1. Visit https://modmuss50.me/fabric.html for latest settings
+2. Paste settings into gradle.properties and increase mod version
+3. Run `.\gradlew vscode`
+4. F5 and test the mod is working
+5. Run `.\gradlew build`
+6. Publish /build/libs/logical_zoom-x.jar
