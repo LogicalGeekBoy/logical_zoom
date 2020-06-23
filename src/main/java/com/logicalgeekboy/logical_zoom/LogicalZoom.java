@@ -1,29 +1,28 @@
 package com.logicalgeekboy.logical_zoom;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
-import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
-
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.options.KeyBinding;
 
 import org.lwjgl.glfw.GLFW;
 
 public class LogicalZoom implements ClientModInitializer {
 
     private static Boolean currentlyZoomed;
-    private static FabricKeyBinding keyBinding;
+    private static KeyBinding keyBinding;
     private static Boolean originalSmoothCameraEnabled;
-    
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
+
     @Override
     public void onInitializeClient() {
-        keyBinding = FabricKeyBinding.Builder.create(new Identifier("logical_zoom", "zoom"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, "Logical Zoom").build();
+        keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, "category.logical_zoom.zoom");
+
         currentlyZoomed = false;
         originalSmoothCameraEnabled = false;
 
-        KeyBindingRegistry.INSTANCE.addCategory("Logical Zoom");
-        KeyBindingRegistry.INSTANCE.register(keyBinding);
+        KeyBindingHelper.registerKeyBinding(keyBinding);
     }
 
     public static Boolean isZooming() {
@@ -35,27 +34,27 @@ public class LogicalZoom implements ClientModInitializer {
     }
 
     public static void manageSmoothCamera() {
-        if(zoomStarting()) {
+        if (zoomStarting()) {
             zoomStarted();
             enableSmoothCamera();
         }
-            
-        if(zoomStopping()) {
+
+        if (zoomStopping()) {
             zoomStopped();
             resetSmoothCamera();
         }
     }
 
     private static Boolean isSmoothCamera() {
-        return MinecraftClient.getInstance().options.smoothCameraEnabled;
+        return mc.options.smoothCameraEnabled;
     }
 
     private static void enableSmoothCamera() {
-        MinecraftClient.getInstance().options.smoothCameraEnabled = true;
+        mc.options.smoothCameraEnabled = true;
     }
 
     private static void disableSmoothCamera() {
-        MinecraftClient.getInstance().options.smoothCameraEnabled = false;
+        mc.options.smoothCameraEnabled = false;
     }
 
     private static boolean zoomStarting() {
@@ -76,7 +75,7 @@ public class LogicalZoom implements ClientModInitializer {
     }
 
     private static void resetSmoothCamera() {
-        if(originalSmoothCameraEnabled) {
+        if (originalSmoothCameraEnabled) {
             enableSmoothCamera();
         } else {
             disableSmoothCamera();

@@ -21,7 +21,7 @@ This is a client-side mod and so doesn't require Fabric on the server.
 ## Updating for new Minecraft version
 
 1. Visit https://modmuss50.me/fabric.html for latest settings
-2. Paste settings into gradle.properties and increase mod version
+2. Paste settings into `gradle.properties` and increase mod version
 3. Check `fabric.mod.json` is using the correct target version of Minecraft and `fabricloader`
 4. Run `.\gradlew vscode`
 5. F5 and test the mod is working
