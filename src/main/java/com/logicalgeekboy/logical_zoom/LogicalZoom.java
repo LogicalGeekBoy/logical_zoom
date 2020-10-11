@@ -15,6 +15,8 @@ public class LogicalZoom implements ClientModInitializer {
     private static Boolean originalSmoothCameraEnabled;
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
+    public static final double zoomLevel = 19.0;
+
     @Override
     public void onInitializeClient() {
         keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, "category.logical_zoom.zoom");
@@ -27,10 +29,6 @@ public class LogicalZoom implements ClientModInitializer {
 
     public static Boolean isZooming() {
         return keyBinding.isPressed();
-    }
-
-    public static double level() {
-        return 19.0; // Hardcoded for now, same FoV amount as Optifine as far as I can make out
     }
 
     public static void manageSmoothCamera() {

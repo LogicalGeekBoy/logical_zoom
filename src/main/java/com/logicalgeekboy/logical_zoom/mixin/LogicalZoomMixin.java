@@ -19,7 +19,7 @@ public class LogicalZoomMixin {
     @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At("HEAD"), cancellable = true)
     public void getZoomLevel(CallbackInfoReturnable<Double> callbackInfo) {
         if(LogicalZoom.isZooming()) {
-            callbackInfo.setReturnValue(LogicalZoom.level());
+            callbackInfo.setReturnValue(LogicalZoom.zoomLevel);
         }
         
         LogicalZoom.manageSmoothCamera();
