@@ -1,4 +1,6 @@
 {
     "key.logical_zoom.zoom": "Toggle Zoom",
-    "category.logical_zoom.zoom": "Logical Zoom"
+    "category.logical_zoom.zoom": "Logical Zoom",
+    "key.logical_zoom.increase": "Increase Zoom",
+    "key.logical_zoom.decrease": "Decrease Zoom"
 }

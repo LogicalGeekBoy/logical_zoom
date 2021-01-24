@@ -5,8 +5,8 @@
   "mixins": [
   ],
   "client": [
-      "LogicalZoomMixin"
-    ],
+      "MixinGameRenderer"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
