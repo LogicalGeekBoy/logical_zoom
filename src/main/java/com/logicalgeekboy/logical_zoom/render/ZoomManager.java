@@ -93,7 +93,7 @@ public class ZoomManager {
         return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), glfwKey);
     }
 
-    public void printFeedback(){
+    public void sendFeedback(){
         if (this.mc.player != null) {
             this.mc.player.sendMessage(new LiteralText("Zoom level is now " + this.zoomLevel), true);
         }

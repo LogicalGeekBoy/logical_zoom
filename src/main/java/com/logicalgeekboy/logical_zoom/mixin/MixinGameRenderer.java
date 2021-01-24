@@ -22,7 +22,7 @@ public class MixinGameRenderer {
         zoomManager.manageSmoothCamera();
 
         if (zoomManager.isIncreasingZoom() || zoomManager.isDecreasingZoom()){
-            zoomManager.printFeedback();
+            zoomManager.sendFeedback();
         }
 
         if (zoomManager.isZooming()) {
