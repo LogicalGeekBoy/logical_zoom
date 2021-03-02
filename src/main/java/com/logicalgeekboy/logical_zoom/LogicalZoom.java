@@ -2,7 +2,10 @@ package com.logicalgeekboy.logical_zoom;
 
 import com.logicalgeekboy.logical_zoom.render.ZoomManager;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public class LogicalZoom implements ClientModInitializer {
 
     @Override
