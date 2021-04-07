@@ -10,7 +10,8 @@
   ],
   "contact": {
     "homepage": "https://logicalgeekboy.com",
-    "sources": "https://github.com/logicalgeekboy/logical_zoom"
+    "sources": "https://github.com/logicalgeekboy/logical_zoom",
+    "issues": "https://github.com/LogicalGeekBoy/logical_zoom/issues"
   },
 
   "license": "MIT",
