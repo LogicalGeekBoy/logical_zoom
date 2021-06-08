@@ -4,15 +4,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 
 import org.lwjgl.glfw.GLFW;
 
 public class LogicalZoom implements ClientModInitializer {
 
-    private static Boolean currentlyZoomed;
+    private static boolean currentlyZoomed;
     private static KeyBinding keyBinding;
-    private static Boolean originalSmoothCameraEnabled;
+    private static boolean originalSmoothCameraEnabled;
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public static final double zoomLevel = 19.0;
@@ -27,7 +27,7 @@ public class LogicalZoom implements ClientModInitializer {
         KeyBindingHelper.registerKeyBinding(keyBinding);
     }
 
-    public static Boolean isZooming() {
+    public static boolean isZooming() {
         return keyBinding.isPressed();
     }
 
@@ -43,7 +43,7 @@ public class LogicalZoom implements ClientModInitializer {
         }
     }
 
-    private static Boolean isSmoothCamera() {
+    private static boolean isSmoothCamera() {
         return mc.options.smoothCameraEnabled;
     }
 
