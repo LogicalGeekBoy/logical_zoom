@@ -20,9 +20,9 @@ public class LogicalZoomMixin {
     public void getZoomLevel(CallbackInfoReturnable<Double> callbackInfo) {
         if(LogicalZoom.isZooming()) {
             double fov = callbackInfo.getReturnValue();
-            callbackInfo.setReturnValue(fov*LogicalZoom.zoomLevel);
+            callbackInfo.setReturnValue(fov * LogicalZoom.zoomLevel);
         }
-        
+
         LogicalZoom.manageSmoothCamera();
     }
 }
