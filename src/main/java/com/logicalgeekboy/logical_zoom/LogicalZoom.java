@@ -15,7 +15,7 @@ public class LogicalZoom implements ClientModInitializer {
     private static boolean originalSmoothCameraEnabled;
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    public static final double zoomLevel = 0.271428571429;
+    public static final double zoomLevel = 0.23;
 
     @Override
     public void onInitializeClient() {
