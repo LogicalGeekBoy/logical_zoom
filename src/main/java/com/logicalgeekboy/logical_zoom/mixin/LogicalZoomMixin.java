@@ -16,10 +16,11 @@ import net.minecraft.client.render.GameRenderer;
 @Mixin(GameRenderer.class)
 public class LogicalZoomMixin {
 
-    @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At("RETURN"), cancellable = true)
     public void getZoomLevel(CallbackInfoReturnable<Double> callbackInfo) {
         if(LogicalZoom.isZooming()) {
-            callbackInfo.setReturnValue(LogicalZoom.zoomLevel);
+            double fov = callbackInfo.getReturnValue();
+            callbackInfo.setReturnValue(fov*LogicalZoom.zoomLevel);
         }
         
         LogicalZoom.manageSmoothCamera();
