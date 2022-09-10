@@ -22,7 +22,7 @@ public class LogicalZoom implements ClientModInitializer {
 	private static final double ZOOM_LEVEL = 0.23;
 	// TODO make configurable (#2)
 	// better to make it a long since it's compared with System.currentTimeMillis()
-	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 500;
+	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 170;
 
 	@Override
 	public void onInitializeClient() {
@@ -110,8 +110,15 @@ public class LogicalZoom implements ClientModInitializer {
 
 	private static enum ZoomState {
 
-		NO_ZOOM((zl, d, x) -> 1.0), ZOOM_IN((zl, d, x) -> 1 - Math.log(toEFraction(d, x)) * (1.0 - zl)),
-		FULL_ZOOM((zl, d, x) -> zl), ZOOM_OUT((zl, d, x) -> zl + Math.log(toEFraction(d, x)) * (1.0 - zl));
+		NO_ZOOM((zl, md, x) -> 1.0), ZOOM_IN((zl, md, x) -> 1 - logAdjusted(zl, md, x)), FULL_ZOOM((zl, md, x) -> zl),
+		ZOOM_OUT((zl, md, x) -> zl + logAdjusted(zl, md, x));
+
+		private static final double Y_MIN = -3.0;
+		private static final double Y_MAX = 3.0;
+		private static final double Y_RANGE = Y_MAX - Y_MIN;
+		private static final double X_MIN = Math.pow(Math.E, Y_MIN);
+		private static final double X_MAX = Math.pow(Math.E, Y_MAX);
+		private static final double X_RANGE = X_MAX - X_MIN;
 
 		private final ZoomLevelFunction zoomLevelFunction;
 
@@ -123,14 +130,18 @@ public class LogicalZoom implements ClientModInitializer {
 			return zoomLevelFunction;
 		}
 
-		private static double toEFraction(double maxDuration, double currentDuration) {
-			return Math.E / maxDuration * currentDuration;
+		private static double logAdjusted(double zoomLevel, double maxDuration, double currentDuration) {
+			return (Math.log(toDomain(maxDuration, currentDuration)) - Y_MIN) / (Y_RANGE) * (1.0 - zoomLevel);
+		}
+
+		private static double toDomain(double maxDuration, double currentDuration) {
+			return X_RANGE / maxDuration * currentDuration + X_MIN;
 		}
 	}
 
 	@FunctionalInterface
 	private static interface ZoomLevelFunction {
 
-		double apply(double zoomLevel, double duration, double currentDuration);
+		double apply(double zoomLevel, double maxDuration, double currentDuration);
 	}
 }
