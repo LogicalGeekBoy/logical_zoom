@@ -22,7 +22,7 @@ public class LogicalZoom implements ClientModInitializer {
 	private static final double ZOOM_LEVEL = 0.23;
 	// TODO make configurable (#2)
 	// better to make it a long since it's compared with System.currentTimeMillis()
-	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 3000; // 170;
+	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 170;
 
 	@Override
 	public void onInitializeClient() {
@@ -42,7 +42,7 @@ public class LogicalZoom implements ClientModInitializer {
 	}
 
 	private static boolean hasMaxDurationPassed() {
-		return System.currentTimeMillis() - lastZoomKeyActionTimestamp >= SMOOTH_ZOOM_DURATION_MILLIS;
+		return getCurrentRemainingDuration() <= 0.0;
 	}
 
 	public static double getCurrentZoomLevel() {
@@ -56,11 +56,10 @@ public class LogicalZoom implements ClientModInitializer {
 		if (isZoomKeyPressed()) {
 			switch (currentState) {
 			case NO_ZOOM:
-				originalSmoothCameraEnabled = isSmoothCameraEnabled();
-				enableSmoothCamera();
+				initZoomIn(0L);
+				break;
 			case ZOOM_OUT:
-				currentState = ZoomState.ZOOM_IN;
-				markKeyAction();
+				initZoomIn(getCurrentRemainingDuration());
 				break;
 			case ZOOM_IN:
 				if (hasMaxDurationPassed()) {
@@ -72,11 +71,11 @@ public class LogicalZoom implements ClientModInitializer {
 			}
 		} else {
 			switch (currentState) {
-			case ZOOM_IN:
 			case FULL_ZOOM:
-				currentState = ZoomState.ZOOM_OUT;
-				markKeyAction();
-				resetSmoothCamera();
+				initZoomOut(0L);
+				break;
+			case ZOOM_IN:
+				initZoomOut(getCurrentRemainingDuration());
 				break;
 			case ZOOM_OUT:
 				if (hasMaxDurationPassed()) {
@@ -89,8 +88,21 @@ public class LogicalZoom implements ClientModInitializer {
 		}
 	}
 
-	private static void markKeyAction() {
-		lastZoomKeyActionTimestamp = System.currentTimeMillis();
+	private static void initZoomIn(long offset) {
+		markKeyEvent(offset);
+		originalSmoothCameraEnabled = isSmoothCameraEnabled();
+		enableSmoothCamera();
+		currentState = ZoomState.ZOOM_IN;
+	}
+
+	private static void initZoomOut(long offset) {
+		markKeyEvent(offset);
+		resetSmoothCamera();
+		currentState = ZoomState.ZOOM_OUT;
+	}
+
+	private static void markKeyEvent(long offset) {
+		lastZoomKeyActionTimestamp = System.currentTimeMillis() - offset;
 	}
 
 	private static boolean isSmoothCameraEnabled() {
@@ -105,8 +117,12 @@ public class LogicalZoom implements ClientModInitializer {
 		MC.options.smoothCameraEnabled = originalSmoothCameraEnabled;
 	}
 
-	private static double getCurrentDuration() {
+	private static long getCurrentDuration() {
 		return System.currentTimeMillis() - lastZoomKeyActionTimestamp;
+	}
+
+	private static long getCurrentRemainingDuration() {
+		return SMOOTH_ZOOM_DURATION_MILLIS - getCurrentDuration();
 	}
 
 	private static enum ZoomState {
