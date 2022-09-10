@@ -22,7 +22,7 @@ public class LogicalZoom implements ClientModInitializer {
 	private static final double ZOOM_LEVEL = 0.23;
 	// TODO make configurable (#2)
 	// better to make it a long since it's compared with System.currentTimeMillis()
-	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 170;
+	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 3000; // 170;
 
 	@Override
 	public void onInitializeClient() {
@@ -76,10 +76,11 @@ public class LogicalZoom implements ClientModInitializer {
 			case FULL_ZOOM:
 				currentState = ZoomState.ZOOM_OUT;
 				markKeyAction();
+				resetSmoothCamera();
+				break;
 			case ZOOM_OUT:
 				if (hasMaxDurationPassed()) {
 					currentState = ZoomState.NO_ZOOM;
-					resetSmoothCamera();
 				}
 				break;
 			case NO_ZOOM:
