@@ -20,6 +20,9 @@
   "entrypoints": {
     "client": [
       "com.logicalgeekboy.logical_zoom.LogicalZoom"
+    ],
+    "modmenu": [
+    	"com.logicalgeekboy.logical_zoom.config.ConfigScreen"
     ]
   },
   "mixins": [

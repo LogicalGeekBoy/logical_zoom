@@ -1,4 +1,7 @@
 {
     "key.logical_zoom.zoom": "Toggle Zoom",
-    "category.logical_zoom.zoom": "Logical Zoom"
+    "category.logical_zoom.zoom": "Logical Zoom",
+    "title.logical_zoom.menu": "Logical Zoom Settings",
+    "option.logical_zoom.toggle_smooth_zoom": "",
+    "tooltip.logical_zoom.toggle_smooth_zoom": ""
 }
