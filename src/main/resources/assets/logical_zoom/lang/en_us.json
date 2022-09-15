@@ -1,7 +1,17 @@
 {
-    "key.logical_zoom.zoom": "Toggle Zoom",
-    "category.logical_zoom.zoom": "Logical Zoom",
-    "title.logical_zoom.menu": "Logical Zoom Settings",
-    "option.logical_zoom.toggle_smooth_zoom": "",
-    "tooltip.logical_zoom.toggle_smooth_zoom": ""
+    "logical_zoom.menu_title": "Logical Zoom Settings",
+    "logical_zoom.category.general": "General",
+    "logical_zoom.category.zoom_key": "Logical Zoom",
+    
+    "logical_zoom.option.zoom_key": "Zoom",
+    "logical_zoom.tooltip.zoom_key": "The key used to zoom in.",
+    
+    "logical_zoom.option.zoom_factor": "Zoom Factor",
+    "logical_zoom.tooltip.zoom_factor": "Defines how much the picture is zoomed when pressing the zoom key.",
+    
+    "logical_zoom.option.enable_smooth_zoom": "Enable Smooth Zoom",
+    "logical_zoom.tooltip.enable_smooth_zoom": "Enables/disables the zoom-in and zoom-out transition animations.",
+    
+    "logical_zoom.option.smooth_zoom_duration_millis": "Smooth Zoom Duration (in ms)",
+    "logical_zoom.tooltip.smooth_zoom_duration_millis": "Defines how long the zoom-in and zoom-out transitions take."
 }

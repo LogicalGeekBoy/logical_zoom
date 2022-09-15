@@ -22,21 +22,32 @@ public class ConfigScreen implements ModMenuApi {
 		general.addEntry(builder.entryBuilder()
 				.startKeyCodeField(Text.translatable(ConfigUtil.OPTION_ZOOM_KEY), HANDLER.getZoomKey())
 				.setDefaultValue(ConfigUtil.getDefaultZoomKey()).setKeySaveConsumer(HANDLER::setZoomKey)
-				.setTooltip(Text.translatable(ConfigUtil.OPTION_ZOOM_KEY)).build());
+				.setTooltip(Text.translatable(ConfigUtil.TOOLTIP_ZOOM_KEY)).build());
 
 		// add zoom factor field (double value)
 		general.addEntry(builder.entryBuilder()
 				.startDoubleField(Text.translatable(ConfigUtil.OPTION_ZOOM_FACTOR), HANDLER.getZoomFactor())
-				.setDefaultValue(Double.parseDouble(ConfigUtil.DEFAULT_ZOOM_FACTOR))
-				.setSaveConsumer(HANDLER::setZoomFactor).setMin(ConfigUtil.MIN_ZOOM_FACTOR)
-				.setMax(ConfigUtil.MAX_ZOOM_FACTOR).setTooltip(Text.translatable(ConfigUtil.TOOLTIP_ZOOM_FACTOR))
+				.setDefaultValue(ConfigUtil.getDefaultZoomFactor()).setSaveConsumer(HANDLER::setZoomFactor)
+				.setMin(ConfigUtil.MIN_ZOOM_FACTOR).setMax(ConfigUtil.MAX_ZOOM_FACTOR)
+				.setTooltip(Text.translatable(ConfigUtil.TOOLTIP_ZOOM_FACTOR))
 				.setErrorSupplier(HANDLER::getZoomFactorError).build());
 
+		// add enable smooth zoom button
 		general.addEntry(builder.entryBuilder()
 				.startBooleanToggle(Text.translatable(ConfigUtil.OPTION_ENABLE_SMOOTH_ZOOM),
 						HANDLER.isSmoothZoomEnabled())
 				.setDefaultValue(ConfigUtil.getDefaultEnableSmoothZoom()).setSaveConsumer(HANDLER::setSmoothZoomEnabled)
-				.build());
+				.setTooltip(Text.translatable(ConfigUtil.TOOLTIP_ENABLE_SMOOTH_ZOOM)).build());
+
+		// add smooth zoom duration field (double value)
+		general.addEntry(builder.entryBuilder()
+				.startLongField(Text.translatable(ConfigUtil.OPTION_SMOOTH_ZOOM_DURATION_MILLIS),
+						HANDLER.getSmoothZoomDurationMillis())
+				.setDefaultValue(ConfigUtil.getDefaultSmoothZoomDurationMillis())
+				.setSaveConsumer(HANDLER::setSmoothZoomDurationMillis)
+				.setMin(ConfigUtil.MIN_SMOOTH_ZOOM_DURATION_MILLIS).setMax(ConfigUtil.MAX_SMOOTH_ZOOM_DURATION_MILLIS)
+				.setTooltip(Text.translatable(ConfigUtil.TOOLTIP_SMOOTH_ZOOM_DURATION_MILLIS))
+				.setErrorSupplier(HANDLER::getSmoothZoomDurationMillisError).build());
 
 		return builder.build();
 	}

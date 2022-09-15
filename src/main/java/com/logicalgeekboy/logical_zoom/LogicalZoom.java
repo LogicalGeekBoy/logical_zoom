@@ -1,6 +1,7 @@
 package com.logicalgeekboy.logical_zoom;
 
-import org.lwjgl.glfw.GLFW;
+import com.logicalgeekboy.logical_zoom.config.ConfigHandler;
+import com.logicalgeekboy.logical_zoom.config.ConfigUtil;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -11,45 +12,46 @@ import net.minecraft.client.util.InputUtil;
 public class LogicalZoom implements ClientModInitializer {
 
 	private static long lastZoomKeyActionTimestamp;
-	private static KeyBinding keyBinding;
+	private static KeyBinding zoomKeyBinding;
 	private static boolean originalSmoothCameraEnabled;
 	private static ZoomState currentState;
 
 	private static final MinecraftClient MC = MinecraftClient.getInstance();
-	// The zoom level is a multiplier of the FOV value (in degrees) which means
-	// that values < 1 decrease the FOV and thus increase the zoom!
-	// TODO think about making configurable (#2)
-	private static final double ZOOM_LEVEL = 0.23;
-	// TODO make configurable (#2)
-	// better to make it a long since it's compared with System.currentTimeMillis()
-	private static final long SMOOTH_ZOOM_DURATION_MILLIS = 170;
+	private static final ConfigHandler HANDLER = ConfigHandler.getInstance();
 
 	@Override
 	public void onInitializeClient() {
 		// TODO add Mod Menu config for smooth zoom on/off + duration (#2)
-		keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C,
-				"category.logical_zoom.zoom");
+		zoomKeyBinding = new KeyBinding(ConfigUtil.OPTION_ZOOM_KEY, InputUtil.Type.KEYSYM, HANDLER.getZoomKeyCode(),
+				ConfigUtil.CATEGORY_ZOOM_KEY);
 
 		lastZoomKeyActionTimestamp = 0L;
 		originalSmoothCameraEnabled = false;
 		currentState = ZoomState.NO_ZOOM;
 
-		KeyBindingHelper.registerKeyBinding(keyBinding);
-	}
-
-	private static boolean isZoomKeyPressed() {
-		return keyBinding.isPressed();
-	}
-
-	private static boolean hasMaxDurationPassed() {
-		return getCurrentRemainingDuration() <= 0.0;
+		KeyBindingHelper.registerKeyBinding(zoomKeyBinding);
 	}
 
 	public static double getCurrentZoomLevel() {
 		updateZoomStateAndSmoothCamera();
 		double currentDurationMillis = getCurrentDuration();
-		return currentState.getZoomLevelFunction().apply(ZOOM_LEVEL, SMOOTH_ZOOM_DURATION_MILLIS,
-				currentDurationMillis);
+		return currentState.getZoomFactorFunction().apply(1 / HANDLER.getZoomFactor(),
+				HANDLER.getSmoothZoomDurationMillis(), currentDurationMillis);
+	}
+
+	public static void updateZoomKeyBinding(InputUtil.Key zoomKey) {
+		// TODO can we make this a thing solely managed by Mod Menu somehow? This seems
+		// a bit hacky.
+		zoomKeyBinding.setBoundKey(zoomKey);
+		KeyBinding.updateKeysByCode();
+	}
+
+	private static boolean isZoomKeyPressed() {
+		return zoomKeyBinding.isPressed();
+	}
+
+	private static boolean hasMaxDurationPassed() {
+		return getCurrentRemainingDuration() <= 0.0;
 	}
 
 	private static void updateZoomStateAndSmoothCamera() {
@@ -92,13 +94,13 @@ public class LogicalZoom implements ClientModInitializer {
 		markKeyEvent(offset);
 		originalSmoothCameraEnabled = isSmoothCameraEnabled();
 		enableSmoothCamera();
-		currentState = ZoomState.ZOOM_IN;
+		currentState = HANDLER.isSmoothZoomEnabled() ? ZoomState.ZOOM_IN : ZoomState.FULL_ZOOM;
 	}
 
 	private static void initZoomOut(long offset) {
 		markKeyEvent(offset);
 		resetSmoothCamera();
-		currentState = ZoomState.ZOOM_OUT;
+		currentState = HANDLER.isSmoothZoomEnabled() ? ZoomState.ZOOM_OUT : ZoomState.NO_ZOOM;
 	}
 
 	private static void markKeyEvent(long offset) {
@@ -122,33 +124,46 @@ public class LogicalZoom implements ClientModInitializer {
 	}
 
 	private static long getCurrentRemainingDuration() {
-		return SMOOTH_ZOOM_DURATION_MILLIS - getCurrentDuration();
+		return HANDLER.getSmoothZoomDurationMillis() - getCurrentDuration();
 	}
 
 	private static enum ZoomState {
 
-		NO_ZOOM((zl, md, x) -> 1.0), ZOOM_IN((zl, md, x) -> 1 - logAdjusted(zl, md, x)), FULL_ZOOM((zl, md, x) -> zl),
-		ZOOM_OUT((zl, md, x) -> zl + logAdjusted(zl, md, x));
+		/**
+		 * No zoom. The zoom factor function always returns 1.
+		 */
+		NO_ZOOM((zf, md, x) -> 1.0),
+		/**
+		 * Zooming in. The zoom factor function returns a value
+		 */
+		ZOOM_IN((zf, md, x) -> 1 - logAdjusted(zf, md, x)), FULL_ZOOM((zf, md, x) -> zf),
+		ZOOM_OUT((zf, md, x) -> zf + logAdjusted(zf, md, x));
 
+		// The y range influences the slope of the zoom factor function especially near
+		// x_min and x_max.
+		// The lower y_min is, the steeper the slope is near x_min.
+		// The higher y_max is, the more shallow the slope is near x_max.
 		private static final double Y_MIN = -3.0;
 		private static final double Y_MAX = 3.0;
 		private static final double Y_RANGE = Y_MAX - Y_MIN;
+		// the min and max x values equal e^y_min and e^y_max respectively because we
+		// want the logarithmic function to produce output values between 0 and 1.
 		private static final double X_MIN = Math.pow(Math.E, Y_MIN);
 		private static final double X_MAX = Math.pow(Math.E, Y_MAX);
 		private static final double X_RANGE = X_MAX - X_MIN;
 
-		private final ZoomLevelFunction zoomLevelFunction;
+		private final ZoomFactorFunction zoomFactorFunction;
 
-		private ZoomState(ZoomLevelFunction zoomLevelFunction) {
-			this.zoomLevelFunction = zoomLevelFunction;
+		private ZoomState(ZoomFactorFunction zoomFactorFunction) {
+			this.zoomFactorFunction = zoomFactorFunction;
 		}
 
-		public ZoomLevelFunction getZoomLevelFunction() {
-			return zoomLevelFunction;
+		public ZoomFactorFunction getZoomFactorFunction() {
+			return zoomFactorFunction;
 		}
 
-		private static double logAdjusted(double zoomLevel, double maxDuration, double currentDuration) {
-			return (Math.log(toDomain(maxDuration, currentDuration)) - Y_MIN) / (Y_RANGE) * (1.0 - zoomLevel);
+		private static double logAdjusted(double zoomFactor, double maxDuration, double currentDuration) {
+			return (Math.log(toDomain(maxDuration, currentDuration)) - Y_MIN) / (Y_RANGE) * (1.0 - zoomFactor);
 		}
 
 		private static double toDomain(double maxDuration, double currentDuration) {
@@ -157,7 +172,7 @@ public class LogicalZoom implements ClientModInitializer {
 	}
 
 	@FunctionalInterface
-	private static interface ZoomLevelFunction {
+	private static interface ZoomFactorFunction {
 
 		double apply(double zoomLevel, double maxDuration, double currentDuration);
 	}

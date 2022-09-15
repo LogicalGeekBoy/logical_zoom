@@ -9,8 +9,11 @@ import java.io.OutputStream;
 import java.util.Optional;
 import java.util.Properties;
 
+import com.logicalgeekboy.logical_zoom.LogicalZoom;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
 import net.minecraft.text.Text;
 
@@ -30,42 +33,66 @@ public class ConfigHandler {
 		loadProperties();
 	}
 
-	static ConfigHandler getInstance() {
+	public static ConfigHandler getInstance() {
 		return INSTANCE;
 	}
 
-	double getZoomFactor() {
+	public double getZoomFactor() {
 		String property = (String) this.properties.getOrDefault(ConfigUtil.OPTION_ZOOM_FACTOR,
 				ConfigUtil.DEFAULT_ENABLE_SMOOTH_ZOOM);
 		return Double.parseDouble(property);
 	}
 
-	Key getZoomKey() {
-		return ConfigUtil.getKeyFromCode(
+	public InputUtil.Key getZoomKey() {
+		return ConfigUtil.getKeyFromCode(Integer.toString(getZoomKeyCode()));
+	}
+
+	public int getZoomKeyCode() {
+		return Integer.parseInt(
 				(String) this.properties.getOrDefault(ConfigUtil.OPTION_ZOOM_KEY, ConfigUtil.DEFAULT_ZOOM_KEY));
 	}
 
-	boolean isSmoothZoomEnabled() {
+	public boolean isSmoothZoomEnabled() {
 		return "true".equals(this.properties.getProperty(ConfigUtil.OPTION_ENABLE_SMOOTH_ZOOM));
 	}
 
-	void setZoomFactor(double zoomFactor) {
+	public long getSmoothZoomDurationMillis() {
+		return Long.parseLong((String) this.properties.getOrDefault(ConfigUtil.OPTION_SMOOTH_ZOOM_DURATION_MILLIS,
+				ConfigUtil.DEFAULT_SMOOTH_ZOOM_DURATION_MILLIS));
+	}
+
+	public void setZoomFactor(double zoomFactor) {
 		this.properties.put(ConfigUtil.OPTION_ZOOM_FACTOR, Double.toString(zoomFactor));
 	}
 
-	void setZoomKey(Key zoomKey) {
+	public void setZoomKey(Key zoomKey) {
 		this.properties.put(ConfigUtil.OPTION_ZOOM_KEY, Integer.toString(zoomKey.getCode()));
+		LogicalZoom.updateZoomKeyBinding(zoomKey);
 	}
 
-	void setSmoothZoomEnabled(boolean isSmoothZoomEnabled) {
+	public void setSmoothZoomEnabled(boolean isSmoothZoomEnabled) {
 		this.properties.put(ConfigUtil.OPTION_ENABLE_SMOOTH_ZOOM, Boolean.toString(isSmoothZoomEnabled));
 	}
 
-	Optional<Text> getZoomFactorError(double zoomFactor) {
+	public void setSmoothZoomDurationMillis(long millis) {
+		this.properties.put(ConfigUtil.OPTION_SMOOTH_ZOOM_DURATION_MILLIS, Long.toString(millis));
+	}
+
+	public Optional<Text> getZoomFactorError(double zoomFactor) {
 		if (zoomFactor < ConfigUtil.MIN_ZOOM_FACTOR) {
 			return Optional.of(Text.translatable(ConfigUtil.ERROR_ZOOM_FACTOR_TOO_SMALL));
 		} else if (zoomFactor > ConfigUtil.MAX_ZOOM_FACTOR) {
 			return Optional.of(Text.translatable(ConfigUtil.ERROR_ZOOM_FACTOR_TOO_LARGE));
+		}
+
+		return Optional.empty();
+	}
+
+	public Optional<Text> getSmoothZoomDurationMillisError(long millis) {
+		if (millis < ConfigUtil.MIN_SMOOTH_ZOOM_DURATION_MILLIS) {
+			return Optional.of(Text.translatable(ConfigUtil.ERROR_SMOOTH_ZOOM_DURATION_MILLIS_TOO_SMALL));
+		} else if (millis > ConfigUtil.MAX_SMOOTH_ZOOM_DURATION_MILLIS) {
+			return Optional.of(Text.translatable(ConfigUtil.ERROR_SMOOTH_ZOOM_DURATION_MILLIS_TOO_LARGE));
 		}
 
 		return Optional.empty();
