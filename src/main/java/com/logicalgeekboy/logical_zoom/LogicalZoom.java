@@ -21,7 +21,6 @@ public class LogicalZoom implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		// TODO add Mod Menu config for smooth zoom on/off + duration (#2)
 		zoomKeyBinding = new KeyBinding(ConfigUtil.OPTION_ZOOM_KEY, InputUtil.Type.KEYSYM, HANDLER.getZoomKeyCode(),
 				ConfigUtil.CATEGORY_ZOOM_KEY);
 

@@ -9,7 +9,10 @@ import java.io.OutputStream;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+
 import com.logicalgeekboy.logical_zoom.LogicalZoom;
+import com.mojang.logging.LogUtils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -21,6 +24,7 @@ public class ConfigHandler {
 
 	private static final File CONFIG_FILE = new File(ConfigUtil.CONFIG_FILE_NAME);
 	private static final ConfigHandler INSTANCE = new ConfigHandler();
+	private static final Logger LOG = LogUtils.getLogger();
 
 	private final ClientPlayerEntity player;
 
@@ -108,7 +112,7 @@ public class ConfigHandler {
 		try (InputStream is = new FileInputStream(CONFIG_FILE)) {
 			this.properties.load(is);
 		} catch (IOException e) {
-			this.player.sendMessage(Text.translatable(ConfigUtil.ERROR_CONFIG_FILE_READ));
+			LOG.error("Could not read from config file!", e);
 			loadDefaultProperties();
 		}
 
@@ -128,10 +132,9 @@ public class ConfigHandler {
 	@SuppressWarnings("resource") // Minecraft client is auto-closable but must not be closed by us.
 	void saveProperties() {
 		try (OutputStream out = new FileOutputStream(CONFIG_FILE)) {
-			// TODO check if the file is overwritten or the contents appended
 			this.properties.store(out, null);
 		} catch (IOException e) {
-			this.player.sendMessage(Text.translatable(ConfigUtil.ERROR_CONFIG_FILE_WRITE));
+			LOG.error("Could not write to config file!", e);
 		}
 	}
 }

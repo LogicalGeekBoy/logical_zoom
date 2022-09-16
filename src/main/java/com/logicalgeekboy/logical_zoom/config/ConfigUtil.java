@@ -40,8 +40,6 @@ public class ConfigUtil {
 	public static final String TOOLTIP_SMOOTH_ZOOM_DURATION_MILLIS = TOOLTIP_PREFIX + ".smooth_zoom_duration_millis";
 
 	public static final String CONFIG_FILE_NAME = "config/logical_zoom.properties";
-	public static final String ERROR_CONFIG_FILE_READ = ERROR_PREFIX + ".config_file_read";
-	public static final String ERROR_CONFIG_FILE_WRITE = ERROR_PREFIX + ".config_file_write";
 	public static final String ERROR_ZOOM_FACTOR_TOO_SMALL = ERROR_PREFIX + ".zoom_factor_too_small";
 	public static final String ERROR_ZOOM_FACTOR_TOO_LARGE = ERROR_PREFIX + ".zoom_factor_too_large";
 	public static final String ERROR_SMOOTH_ZOOM_DURATION_MILLIS_TOO_SMALL = ERROR_PREFIX
