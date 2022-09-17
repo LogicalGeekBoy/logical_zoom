@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "logical_zoom",
-  "version": "${version}",
+  "version": "${project.version}",
 
   "name": "Logical Zoom",
   "description": "A simple zoom",
@@ -12,6 +12,17 @@
     "homepage": "https://logicalgeekboy.com",
     "sources": "https://github.com/logicalgeekboy/logical_zoom"
   },
+  "contributors": [
+    {
+      "name": "marcelbpunkt",
+      "contact": {
+        "homepage": "https://github.com/marcelbpunkt",
+        "sources": "https://github.com/marcelbpunkt/logical_zoom",
+        "issues": "https://github.com/marcelbpunkt/logical_zoom/issues",
+        "discord": "https://discordapp.com/users/marcelbpunkt#8899"
+      }
+    }
+  ],
 
   "license": "MIT",
   "icon": "assets/logical_zoom/icon.png",
@@ -20,6 +31,9 @@
   "entrypoints": {
     "client": [
       "com.logicalgeekboy.logical_zoom.LogicalZoom"
+    ],
+    "modmenu": [
+    	"com.logicalgeekboy.logical_zoom.config.ConfigScreen"
     ]
   },
   "mixins": [
@@ -30,11 +44,13 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.9",
-    "fabric": "*",
-    "minecraft": "1.19.2"
+    "fabricloader": ">=${project.loader_version}",
+    "fabric-api": "*",
+    "minecraft": ">=1.19 <1.20",
+    "cloth-config": ">=${project.cloth_config_version}"
   },
   "suggests": {
-    "flamingo": "*"
+    "flamingo": "*",
+    "modmenu": ">=${project.modmenu_version}"
   }
 }

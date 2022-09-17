@@ -12,6 +12,10 @@ classes/
 *.ipr
 *.iws
 
+# eclipse
+
+*.launch
+
 # vscode
 
 .settings/
@@ -23,3 +27,7 @@ bin/
 # fabric
 
 run/
+
+# old files
+
+*.old

@@ -1,4 +1,22 @@
 {
-    "key.logical_zoom.zoom": "Toggle Zoom",
-    "category.logical_zoom.zoom": "Logical Zoom"
+    "key.logical_zoom.zoom": "Zoom",
+    "category.logical_zoom.zoom": "Logical Zoom",
+
+    "logical_zoom.menu_title": "Logical Zoom Settings",
+    "logical_zoom.category.general": "General",
+    
+    
+    "logical_zoom.option.zoom_factor": "Zoom Factor",
+    "logical_zoom.tooltip.zoom_factor": "Defines how much the picture is zoomed when pressing the zoom key.",
+    
+    "logical_zoom.option.enable_smooth_zoom": "Enable Smooth Zoom",
+    "logical_zoom.tooltip.enable_smooth_zoom": "Enables/disables zoom-in/-out animations.",
+    
+    "logical_zoom.option.smooth_zoom_duration_millis": "Smooth Zoom Duration (in ms)",
+    "logical_zoom.tooltip.smooth_zoom_duration_millis": "Defines how long the animations take (higher value = slower).",
+    
+    "logical_zoom.error.zoom_factor_too_small": "Zoom factor too small (min. 1.0)!",
+    "logical_zoom.error.zoom_factor_too_large": "Zoom factor too large (max. 5.0)!",
+    "logical_zoom.error.smooth_zoom_duration_millis_too_small": "Duration must be positive!",
+    "logical_zoom.error.smooth_zoom_duration_millis_too_large": "Duration too large (max. 10000)!"
 }
