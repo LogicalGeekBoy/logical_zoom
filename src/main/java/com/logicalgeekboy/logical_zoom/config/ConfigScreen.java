@@ -18,12 +18,6 @@ public class ConfigScreen implements ModMenuApi {
 
 		ConfigCategory general = builder.getOrCreateCategory(Text.translatable(ConfigUtil.CATEGORY_GENERAL));
 
-		// add zoom key field
-		general.addEntry(builder.entryBuilder()
-				.startKeyCodeField(Text.translatable(ConfigUtil.OPTION_ZOOM_KEY), HANDLER.getZoomKey())
-				.setDefaultValue(ConfigUtil.getDefaultZoomKey()).setKeySaveConsumer(HANDLER::setZoomKey)
-				.setTooltip(Text.translatable(ConfigUtil.TOOLTIP_ZOOM_KEY)).build());
-
 		// add zoom factor field (double value)
 		general.addEntry(builder.entryBuilder()
 				.startDoubleField(Text.translatable(ConfigUtil.OPTION_ZOOM_FACTOR), HANDLER.getZoomFactor())

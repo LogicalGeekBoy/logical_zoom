@@ -1,10 +1,10 @@
 {
+    "key.logical_zoom.zoom": "Zoom",
+    "category.logical_zoom.zoom": "Logical Zoom",
+
     "logical_zoom.menu_title": "Logical Zoom Settings",
     "logical_zoom.category.general": "General",
-    "logical_zoom.category.zoom_key": "Logical Zoom",
     
-    "logical_zoom.option.zoom_key": "Zoom",
-    "logical_zoom.tooltip.zoom_key": "The key used to zoom in.",
     
     "logical_zoom.option.zoom_factor": "Zoom Factor",
     "logical_zoom.tooltip.zoom_factor": "Defines how much the picture is zoomed when pressing the zoom key.",

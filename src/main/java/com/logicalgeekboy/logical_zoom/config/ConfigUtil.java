@@ -1,9 +1,5 @@
 package com.logicalgeekboy.logical_zoom.config;
 
-import org.lwjgl.glfw.GLFW;
-
-import net.minecraft.client.util.InputUtil;
-
 public class ConfigUtil {
 
 	public static final String NAMESPACE = "logical_zoom";
@@ -11,31 +7,26 @@ public class ConfigUtil {
 	public static final String CATEGORY_PREFIX = NAMESPACE + ".category";
 	public static final String OPTION_PREFIX = NAMESPACE + ".option";
 	public static final String TOOLTIP_PREFIX = NAMESPACE + ".tooltip";
-	public static final String WARN_PREFIX = NAMESPACE + ".warn";
 	public static final String ERROR_PREFIX = NAMESPACE + ".error";
 
 	public static final String MENU_TITLE = NAMESPACE + ".menu_title";
 
 	public static final String CATEGORY_GENERAL = CATEGORY_PREFIX + ".general";
-	public static final String CATEGORY_ZOOM_KEY = CATEGORY_PREFIX + ".zoom_key";
 
-	public static final String OPTION_ZOOM_KEY = OPTION_PREFIX + ".zoom_key";
 	public static final String OPTION_ZOOM_FACTOR = OPTION_PREFIX + ".zoom_factor";
 	public static final String OPTION_ENABLE_SMOOTH_ZOOM = OPTION_PREFIX + ".enable_smooth_zoom";
 	public static final String OPTION_SMOOTH_ZOOM_DURATION_MILLIS = OPTION_PREFIX + ".smooth_zoom_duration_millis";
 
-	public static final String DEFAULT_ZOOM_KEY = Integer.toString(GLFW.GLFW_KEY_C);
 	public static final String DEFAULT_ZOOM_FACTOR = "3.0";
 	public static final double MIN_ZOOM_FACTOR = 1.0;
 	public static final double MAX_ZOOM_FACTOR = 5.0;
 	public static final String DEFAULT_ENABLE_SMOOTH_ZOOM = "true";
-	public static final String DEFAULT_SMOOTH_ZOOM_DURATION_MILLIS = "150";
+	public static final String DEFAULT_SMOOTH_ZOOM_DURATION_MILLIS = "120";
 	// The duration value must not be zero or it will lead to a division by zero!
 	public static final long MIN_SMOOTH_ZOOM_DURATION_MILLIS = 1L;
 	public static final long MAX_SMOOTH_ZOOM_DURATION_MILLIS = 10000L;
 
 	public static final String TOOLTIP_ZOOM_FACTOR = TOOLTIP_PREFIX + ".zoom_factor";
-	public static final String TOOLTIP_ZOOM_KEY = TOOLTIP_PREFIX + ".zoom_key";
 	public static final String TOOLTIP_ENABLE_SMOOTH_ZOOM = TOOLTIP_PREFIX + ".enable_smooth_zoom";
 	public static final String TOOLTIP_SMOOTH_ZOOM_DURATION_MILLIS = TOOLTIP_PREFIX + ".smooth_zoom_duration_millis";
 
@@ -46,18 +37,6 @@ public class ConfigUtil {
 			+ ".smooth_zoom_duration_millis_too_small";
 	public static final String ERROR_SMOOTH_ZOOM_DURATION_MILLIS_TOO_LARGE = ERROR_PREFIX
 			+ ".smooth_zoom_duration_millis_too_large";
-
-	public static InputUtil.Key getDefaultZoomKey() {
-		return getKeyFromCode(DEFAULT_ZOOM_KEY);
-	}
-
-	public static InputUtil.Key getKeyFromCode(String property) {
-		return getKeyFromCode(Integer.parseInt(property));
-	}
-
-	public static InputUtil.Key getKeyFromCode(int keyCode) {
-		return InputUtil.Type.KEYSYM.createFromCode(keyCode);
-	}
 
 	public static double getDefaultZoomFactor() {
 		return Double.parseDouble(DEFAULT_ZOOM_FACTOR);

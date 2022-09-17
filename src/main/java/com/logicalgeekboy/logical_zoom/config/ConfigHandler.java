@@ -11,13 +11,8 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 
-import com.logicalgeekboy.logical_zoom.LogicalZoom;
 import com.mojang.logging.LogUtils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.InputUtil.Key;
 import net.minecraft.text.Text;
 
 public class ConfigHandler {
@@ -26,13 +21,9 @@ public class ConfigHandler {
 	private static final ConfigHandler INSTANCE = new ConfigHandler();
 	private static final Logger LOG = LogUtils.getLogger();
 
-	private final ClientPlayerEntity player;
-
 	private Properties properties;
 
-	@SuppressWarnings("resource") // Minecraft client is auto-closable but must not be closed by us.
 	private ConfigHandler() {
-		this.player = MinecraftClient.getInstance().player;
 		this.properties = new Properties();
 		loadProperties();
 	}
@@ -47,15 +38,6 @@ public class ConfigHandler {
 		return Double.parseDouble(property);
 	}
 
-	public InputUtil.Key getZoomKey() {
-		return ConfigUtil.getKeyFromCode(Integer.toString(getZoomKeyCode()));
-	}
-
-	public int getZoomKeyCode() {
-		return Integer.parseInt(
-				(String) this.properties.getOrDefault(ConfigUtil.OPTION_ZOOM_KEY, ConfigUtil.DEFAULT_ZOOM_KEY));
-	}
-
 	public boolean isSmoothZoomEnabled() {
 		return "true".equals(this.properties.getProperty(ConfigUtil.OPTION_ENABLE_SMOOTH_ZOOM));
 	}
@@ -67,11 +49,6 @@ public class ConfigHandler {
 
 	public void setZoomFactor(double zoomFactor) {
 		this.properties.put(ConfigUtil.OPTION_ZOOM_FACTOR, Double.toString(zoomFactor));
-	}
-
-	public void setZoomKey(Key zoomKey) {
-		this.properties.put(ConfigUtil.OPTION_ZOOM_KEY, Integer.toString(zoomKey.getCode()));
-		LogicalZoom.updateZoomKeyBinding(zoomKey);
 	}
 
 	public void setSmoothZoomEnabled(boolean isSmoothZoomEnabled) {
@@ -102,7 +79,6 @@ public class ConfigHandler {
 		return Optional.empty();
 	}
 
-	@SuppressWarnings("resource") // Minecraft client is auto-closable but must not be closed by us.
 	private void loadProperties() {
 		if (!CONFIG_FILE.exists()) {
 			loadDefaultProperties();
@@ -121,7 +97,6 @@ public class ConfigHandler {
 	private void loadDefaultProperties() {
 		properties.put(ConfigUtil.OPTION_ENABLE_SMOOTH_ZOOM, ConfigUtil.DEFAULT_ENABLE_SMOOTH_ZOOM);
 		properties.put(ConfigUtil.OPTION_ZOOM_FACTOR, ConfigUtil.DEFAULT_ZOOM_FACTOR);
-		properties.put(ConfigUtil.OPTION_ZOOM_KEY, ConfigUtil.DEFAULT_ZOOM_KEY);
 
 		// since the default properties are only loaded if the properties file does not
 		// exist or cannot be accessed for whatever reason, let's create/overwrite the
@@ -129,7 +104,6 @@ public class ConfigHandler {
 		saveProperties();
 	}
 
-	@SuppressWarnings("resource") // Minecraft client is auto-closable but must not be closed by us.
 	void saveProperties() {
 		try (OutputStream out = new FileOutputStream(CONFIG_FILE)) {
 			this.properties.store(out, null);

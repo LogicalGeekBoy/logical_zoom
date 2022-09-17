@@ -21,8 +21,14 @@ public class LogicalZoom implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		zoomKeyBinding = new KeyBinding(ConfigUtil.OPTION_ZOOM_KEY, InputUtil.Type.KEYSYM, HANDLER.getZoomKeyCode(),
-				ConfigUtil.CATEGORY_ZOOM_KEY);
+		/*
+		 * The order of "key"/"category", the namespace and "zoom" is slightly different
+		 * than in ConfigUtil in order to be consistent with the rest of the keybinds.
+		 * It's also not included in the config classes because the zoom key is only
+		 * configurable via Options -> Controls -> Key Binds.
+		 */
+		zoomKeyBinding = new KeyBinding("key." + ConfigUtil.NAMESPACE + ".zoom", InputUtil.Type.KEYSYM,
+				InputUtil.GLFW_KEY_C, "category." + ConfigUtil.NAMESPACE + ".zoom");
 
 		lastZoomKeyActionTimestamp = 0L;
 		originalSmoothCameraEnabled = false;
@@ -36,13 +42,6 @@ public class LogicalZoom implements ClientModInitializer {
 		double currentDurationMillis = getCurrentDuration();
 		return currentState.getZoomFactorFunction().apply(1 / HANDLER.getZoomFactor(),
 				HANDLER.getSmoothZoomDurationMillis(), currentDurationMillis);
-	}
-
-	public static void updateZoomKeyBinding(InputUtil.Key zoomKey) {
-		// TODO can we make this a thing solely managed by Mod Menu somehow? This seems
-		// a bit hacky.
-		zoomKeyBinding.setBoundKey(zoomKey);
-		KeyBinding.updateKeysByCode();
 	}
 
 	private static boolean isZoomKeyPressed() {
@@ -142,7 +141,7 @@ public class LogicalZoom implements ClientModInitializer {
 		// x_min and x_max.
 		// The lower y_min is, the steeper the slope is near x_min.
 		// The higher y_max is, the more shallow the slope is near x_max.
-		private static final double Y_MIN = -3.0;
+		private static final double Y_MIN = -2.5;
 		private static final double Y_MAX = 3.0;
 		private static final double Y_RANGE = Y_MAX - Y_MIN;
 		// the min and max x values equal e^y_min and e^y_max respectively because we
