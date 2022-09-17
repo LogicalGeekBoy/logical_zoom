@@ -8,10 +8,23 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
+/**
+ * Builds and registers the Logical Zoom configuration screen and registers it
+ * with Mod Menu (if installed).
+ * 
+ * @author marcelbpunkt
+ *
+ */
 public class ConfigScreen implements ModMenuApi {
 
 	private static final ConfigHandler HANDLER = ConfigHandler.getInstance();
 
+	/**
+	 * Builds and returns the Logical Zoom configuration screen.
+	 * 
+	 * @param parent the screen from which this screen is opened
+	 * @return the Logical Zoom configuration screen
+	 */
 	public static Screen createConfigScreen(Screen parent) {
 		ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent)
 				.setTitle(Text.translatable(ConfigUtil.MENU_TITLE)).setSavingRunnable(HANDLER::saveProperties);
@@ -33,7 +46,7 @@ public class ConfigScreen implements ModMenuApi {
 				.setDefaultValue(ConfigUtil.getDefaultEnableSmoothZoom()).setSaveConsumer(HANDLER::setSmoothZoomEnabled)
 				.setTooltip(Text.translatable(ConfigUtil.TOOLTIP_ENABLE_SMOOTH_ZOOM)).build());
 
-		// add smooth zoom duration field (double value)
+		// add smooth zoom duration field (long value)
 		general.addEntry(builder.entryBuilder()
 				.startLongField(Text.translatable(ConfigUtil.OPTION_SMOOTH_ZOOM_DURATION_MILLIS),
 						HANDLER.getSmoothZoomDurationMillis())

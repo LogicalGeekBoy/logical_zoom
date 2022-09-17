@@ -42,16 +42,8 @@ dependencies {
 }
 
 processResources {
-	// inputs.property "version", project.version
-	// inputs.property "loader_version", project.loader_version
-	// inputs.property "cloth_config_version", project.cloth_config_version
-	// inputs.property "modmenu_version", project.modmenu_version
-
 	filesMatching("fabric.mod.json") {
-		expand (project: project) // "version": project.version
-		// expand "loader_version": project.loader_version
-		// expand "cloth_config_version": project.cloth_config_version
-		// expand "modmenu_version": project.modmenu_version
+		expand (project: project)
 	}
 }
 
