@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.logicalgeekboy.logical_zoom.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
