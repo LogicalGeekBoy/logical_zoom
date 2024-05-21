@@ -10,6 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.fabricmc.loader.api.FabricLoader;
+import com.moulberry.axiom.editor.EditorUI;
+
 import net.minecraft.client.render.GameRenderer;
 
 @Environment(EnvType.CLIENT)
@@ -18,6 +21,10 @@ public class LogicalZoomMixin {
 
     @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At("RETURN"), cancellable = true)
     public void getZoomLevel(CallbackInfoReturnable<Double> callbackInfo) {
+        if(FabricLoader.getInstance().isModLoaded("axiom") && EditorUI.isActive()) {
+            return;
+        }
+
         if(LogicalZoom.isZooming()) {
             double fov = callbackInfo.getReturnValue();
             callbackInfo.setReturnValue(fov * LogicalZoom.zoomLevel);
