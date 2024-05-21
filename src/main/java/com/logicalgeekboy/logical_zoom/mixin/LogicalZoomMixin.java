@@ -2,6 +2,7 @@ package com.logicalgeekboy.logical_zoom.mixin;
 
 import com.logicalgeekboy.logical_zoom.LogicalZoom;
 
+import com.logicalgeekboy.logical_zoom.compat.AxiomCompat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.fabricmc.loader.api.FabricLoader;
-import com.moulberry.axiom.editor.EditorUI;
 
 import net.minecraft.client.render.GameRenderer;
 
@@ -21,7 +21,7 @@ public class LogicalZoomMixin {
 
     @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At("RETURN"), cancellable = true)
     public void getZoomLevel(CallbackInfoReturnable<Double> callbackInfo) {
-        if(FabricLoader.getInstance().isModLoaded("axiom") && EditorUI.isActive()) {
+        if(FabricLoader.getInstance().isModLoaded("axiom") && AxiomCompat.isInEditor()) {
             return;
         }
 
