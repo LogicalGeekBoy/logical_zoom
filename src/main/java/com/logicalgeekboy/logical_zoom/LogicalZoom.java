@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.util.Identifier;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -19,7 +20,8 @@ public class LogicalZoom implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, "category.logical_zoom.zoom");
+        KeyBinding.Category category = KeyBinding.Category.create(Identifier.of("logicalzoom", "category.logical_zoom.zoom"));
+        keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, category);
 
         currentlyZoomed = false;
         originalSmoothCameraEnabled = false;
