@@ -1,36 +1,39 @@
 package com.logicalgeekboy.logical_zoom;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.Identifier;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 
 import org.lwjgl.glfw.GLFW;
 
 public class LogicalZoom implements ClientModInitializer {
 
     private static boolean currentlyZoomed;
-    private static KeyBinding keyBinding;
+    private static KeyMapping keyBinding;
     private static boolean originalSmoothCameraEnabled;
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft  mc = Minecraft.getInstance();
 
     public static final float zoomLevel = (float) 0.23;
 
     @Override
     public void onInitializeClient() {
-        KeyBinding.Category category = KeyBinding.Category.create(Identifier.of("logicalzoom", "category.logical_zoom.zoom"));
-        keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_C, category);
+        KeyMapping.Category category = KeyMapping.Category.register(
+                Identifier.fromNamespaceAndPath("logicalzoom", "logical_zoom")
+        );
+        keyBinding = new KeyMapping("key.logical_zoom.zoom", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, category);
+
+        KeyMappingHelper.registerKeyMapping(keyBinding);
 
         currentlyZoomed = false;
         originalSmoothCameraEnabled = false;
 
-        KeyBindingHelper.registerKeyBinding(keyBinding);
     }
 
     public static boolean isZooming() {
-        return keyBinding.isPressed();
+        return keyBinding.isDown();
     }
 
     public static void manageSmoothCamera() {
@@ -46,15 +49,15 @@ public class LogicalZoom implements ClientModInitializer {
     }
 
     private static boolean isSmoothCamera() {
-        return mc.options.smoothCameraEnabled;
+        return mc.options.smoothCamera;
     }
 
     private static void enableSmoothCamera() {
-        mc.options.smoothCameraEnabled = true;
+        mc.options.smoothCamera = true;
     }
 
     private static void disableSmoothCamera() {
-        mc.options.smoothCameraEnabled = false;
+        mc.options.smoothCamera = false;
     }
 
     private static boolean zoomStarting() {

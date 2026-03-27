@@ -1,28 +1,53 @@
 package com.logicalgeekboy.logical_zoom.mixin;
 
 import com.logicalgeekboy.logical_zoom.LogicalZoom;
-
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-
-import net.minecraft.client.render.GameRenderer;
-
-@Environment(EnvType.CLIENT)
 @Mixin(GameRenderer.class)
 public class LogicalZoomMixin {
 
-    @Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)F", at = @At("RETURN"), cancellable = true)
-    public void getZoomLevel(CallbackInfoReturnable<Float> callbackInfo) {
-        if(LogicalZoom.isZooming()) {
-            float fov = callbackInfo.getReturnValue();
-            callbackInfo.setReturnValue(fov * LogicalZoom.zoomLevel);
+    @ModifyVariable(
+            method = "renderLevel",
+            at = @At(value = "STORE"),
+            ordinal = 0
+    )
+    private Matrix4f logicalZoom$modifyProjectionMatrix(Matrix4f projectionMatrix) {
+        LogicalZoom.manageSmoothCamera();
+
+        if (LogicalZoom.isZooming()) {
+            float scale = 1.0f / LogicalZoom.zoomLevel;
+            projectionMatrix.scale(scale, scale, 1.0f);
         }
 
-        LogicalZoom.manageSmoothCamera();
+        return projectionMatrix;
+    }
+
+    @WrapWithCondition(
+            method = "renderItemInHand",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderHandsWithItems(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/player/LocalPlayer;I)V"
+            )
+    )
+    private boolean logicalZoom$hideHandsWhenZooming(
+            ItemInHandRenderer itemInHandRenderer,
+            float deltaPartialTick,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            LocalPlayer player,
+            int packedLight
+    ) {
+        return !(LogicalZoom.isZooming()
+                && Minecraft.getInstance().options.getCameraType().isFirstPerson());
     }
 }
