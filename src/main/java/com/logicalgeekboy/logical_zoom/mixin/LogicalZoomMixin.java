@@ -1,13 +1,14 @@
 package com.logicalgeekboy.logical_zoom.mixin;
 
 import com.logicalgeekboy.logical_zoom.LogicalZoom;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.level.FirstPersonHandsAndItemsRenderState;
+import net.minecraft.client.renderer.state.level.PlayerRenderState;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,19 +34,19 @@ public class LogicalZoomMixin {
     }
 
     @WrapWithCondition(
-            method = "renderItemInHand(Lnet/minecraft/client/renderer/state/level/CameraRenderState;FLorg/joml/Matrix4fc;)V",
+            method = "renderItemInHand(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lcom/mojang/renderpearl/api/textures/GpuTextureView;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;submitHandsWithItems(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/player/LocalPlayer;I)V"
+                    target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;submitHandsWithItems(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;)V"
             )
     )
     private boolean logicalZoom$hideHandsWhenZooming(
-            ItemInHandRenderer itemInHandRenderer,
+            FirstPersonHandsAndItemsRenderer firstPersonHandsAndItemsRenderer,
             float deltaPartialTick,
             PoseStack poseStack,
             SubmitNodeCollector submitNodeCollector,
-            LocalPlayer player,
-            int packedLight
+            PlayerRenderState playerRenderState,
+            FirstPersonHandsAndItemsRenderState handsAndItemsRenderState
     ) {
         return !(LogicalZoom.isZooming()
                 && Minecraft.getInstance().options.getCameraType().isFirstPerson());

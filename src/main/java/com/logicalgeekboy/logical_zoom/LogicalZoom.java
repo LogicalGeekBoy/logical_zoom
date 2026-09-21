@@ -7,8 +7,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 
-import org.lwjgl.glfw.GLFW;
-
 public class LogicalZoom implements ClientModInitializer {
 
     private static boolean currentlyZoomed;
@@ -23,7 +21,7 @@ public class LogicalZoom implements ClientModInitializer {
         KeyMapping.Category category = KeyMapping.Category.register(
                 Identifier.fromNamespaceAndPath("logicalzoom", "logical_zoom")
         );
-        keyBinding = new KeyMapping("key.logical_zoom.zoom", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, category);
+        keyBinding = new KeyMapping("key.logical_zoom.zoom", InputConstants.Type.KEYBOARD, InputConstants.KEY_C, category);
 
         KeyMappingHelper.registerKeyMapping(keyBinding);
 
